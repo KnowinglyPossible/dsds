@@ -1,0 +1,135 @@
+.vscode-theme {
+    --vscode-editor-background: #1e1e1e;
+    --vscode-sidebar-background: #252526;
+    --vscode-activityBar-background: #333333;
+    --vscode-foreground: #cccccc;
+    --vscode-input-background: #3c3c3c;
+    --vscode-input-foreground: #cccccc;
+    --vscode-input-border: #3c3c3c;
+    --vscode-button-background: #0e639c;
+    --vscode-button-foreground: #ffffff;
+    --vscode-button-hoverBackground: #1177bb;
+    --vscode-textLink-foreground: #3794ff;
+}
+
+.vscode-container {
+    display: flex;
+    height: 100vh;
+    background: var(--vscode-editor-background);
+    color: var(--vscode-foreground);
+}
+
+/* Activity Bar */
+.activity-bar {
+    width: 50px;
+    background: var(--vscode-activityBar-background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.activity-bar-item {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.activity-bar-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.activity-bar-item.active {
+    border-left: 2px solid #fff;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: var(--vscode-sidebar-background);
+    border-right: 1px solid #1a1a1a;
+}
+
+.sidebar-header {
+    padding: 10px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.sidebar-content {
+    padding: 10px;
+}
+
+/* File Tree */
+.file-tree {
+    font-size: 13px;
+}
+
+.folder {
+    margin-bottom: 5px;
+}
+
+.folder span {
+    cursor: pointer;
+    padding: 3px;
+}
+
+.folder span:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.folder-content {
+    margin-left: 15px;
+}
+
+.file {
+    padding: 3px;
+    cursor: pointer;
+}
+
+.file:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Editor Area */
+.editor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tabs {
+    height: 35px;
+    background: #2d2d2d;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.tab {
+    padding: 5px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    border-right: 1px solid #1a1a1a;
+}
+
+.tab.active {
+    background: var(--vscode-editor-background);
+}
+
+.editor-content {
+    flex: 1;
+    padding: 10px;
+    overflow: auto;
+}
+
+pre {
+    margin: 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+}

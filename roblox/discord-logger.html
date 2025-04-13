@@ -186,7 +186,6 @@
                 this.sendButton.addEventListener('click', () => this.sendMessage());
                 this.clearButton.addEventListener('click', () => this.clearAll());
                 
-                // Add input validation listeners
                 this.webhookUrlInput.addEventListener('input', () => this.validateWebhookUrl());
                 this.messageInput.addEventListener('input', () => this.validateMessage());
             }
@@ -227,7 +226,6 @@
                 this.statusDiv.textContent = message;
                 this.statusDiv.className = `status-${type} visible`;
                 
-                // Auto-hide success messages after 3 seconds
                 if (type === 'success') {
                     setTimeout(() => {
                         this.statusDiv.className = '';
@@ -243,10 +241,8 @@
                 const webhookUrl = this.webhookUrlInput.value.trim();
                 const messageContent = this.messageInput.value.trim();
 
-                // Save webhook URL
                 localStorage.setItem('discordWebhookUrl', webhookUrl);
 
-                // Update UI state
                 this.sendButton.disabled = true;
                 this.sendButton.textContent = 'Sending...';
                 this.showStatus('Sending message...', 'info');
@@ -286,7 +282,6 @@
             }
         }
 
-        // Initialize the Discord Logger
         document.addEventListener('DOMContentLoaded', () => {
             new DiscordLogger();
         });
