@@ -5,197 +5,291 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord Logger</title>
     <style>
+        :root {
+            --discord-blue: #7289DA;
+            --discord-blue-hover: #5f73bc;
+            --discord-grey: #99aab5;
+            --success-bg: #d4edda;
+            --success-color: #155724;
+            --error-bg: #f8d7da;
+            --error-color: #721c24;
+            --info-bg: #e2e3e5;
+            --info-color: #383d41;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
             padding: 20px;
-            max-width: 600px;
+            max-width: 800px;
             margin: 40px auto;
             background-color: #f4f4f4;
-            border: 1px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
+        .container {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+        }
+
         h1 {
-            color: #333;
+            color: var(--discord-blue);
             text-align: center;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
             margin-bottom: 20px;
         }
+
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
+            font-weight: 600;
+            color: #2f3136;
         }
+
         input[type="url"],
         textarea {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            padding: 12px;
+            border: 2px solid #e3e5e8;
+            border-radius: 6px;
+            box-sizing: border-box;
             font-size: 1rem;
+            transition: border-color 0.3s ease;
         }
+
+        input[type="url"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--discord-blue);
+        }
+
         textarea {
-            min-height: 100px;
+            min-height: 120px;
             resize: vertical;
         }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
         button {
-            display: block;
-            width: 100%;
+            flex: 1;
             padding: 12px 20px;
-            background-color: #7289DA; /* Discord blue */
+            background-color: var(--discord-blue);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 1.1rem;
-            transition: background-color 0.2s ease;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
-        button:hover {
-            background-color: #5f73bc;
+
+        button:hover:not(:disabled) {
+            background-color: var(--discord-blue-hover);
+            transform: translateY(-1px);
         }
+
         button:disabled {
-            background-color: #99aab5; /* Discord grey */
+            background-color: var(--discord-grey);
             cursor: not-allowed;
         }
+
+        #clearButton {
+            background-color: #dc3545;
+        }
+
+        #clearButton:hover {
+            background-color: #c82333;
+        }
+
         #status {
             margin-top: 20px;
-            padding: 10px;
-            border-radius: 4px;
+            padding: 12px;
+            border-radius: 6px;
             text-align: center;
-            font-weight: bold;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
+
+        #status.visible {
+            opacity: 1;
+        }
+
         .status-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background-color: var(--success-bg);
+            color: var(--success-color);
         }
+
         .status-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background-color: var(--error-bg);
+            color: var(--error-color);
         }
+
         .status-info {
-            background-color: #e2e3e5;
-            color: #383d41;
-            border: 1px solid #d6d8db;
+            background-color: var(--info-bg);
+            color: var(--info-color);
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Discord Logger</h1>
 
-    <h1>Discord Logger</h1>
+        <div class="form-group">
+            <label for="webhookUrl">Discord Webhook URL:</label>
+            <input type="url" 
+                   id="webhookUrl" 
+                   name="webhookUrl" 
+                   placeholder="https://discord.com/api/webhooks/..." 
+                   required>
+        </div>
 
-    <div>
-        <label for="webhookUrl">Discord Webhook URL:</label>
-        <input type="url" id="webhookUrl" name="webhookUrl" placeholder="Enter your Discord Webhook URL here" required>
+        <div class="form-group">
+            <label for="message">Message:</label>
+            <textarea id="message" 
+                      name="message" 
+                      placeholder="Enter your message here..." 
+                      required></textarea>
+        </div>
+
+        <div class="button-group">
+            <button id="sendButton">Send Message</button>
+            <button id="clearButton">Clear All</button>
+        </div>
+
+        <div id="status"></div>
     </div>
-
-    <div>
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" placeholder="Enter the message to log" required></textarea>
-    </div>
-
-    <button id="sendButton">Send Message</button>
-
-    <div id="status"></div>
 
     <script>
-        const webhookUrlInput = document.getElementById('webhookUrl');
-        const messageInput = document.getElementById('message');
-        const sendButton = document.getElementById('sendButton');
-        const statusDiv = document.getElementById('status');
-
-        // Optional: Load webhook URL from localStorage if previously saved
-        webhookUrlInput.value = localStorage.getItem('discordWebhookUrl') || '';
-
-        sendButton.addEventListener('click', sendMessage);
-
-        async function sendMessage() {
-            const webhookUrl = webhookUrlInput.value.trim();
-            const messageContent = messageInput.value.trim();
-
-            // Clear previous status
-            statusDiv.textContent = '';
-            statusDiv.className = ''; // Remove previous status classes
-
-            // Basic Validation
-            if (!webhookUrl) {
-                showStatus('Webhook URL is required.', 'error');
-                webhookUrlInput.focus();
-                return;
-            }
-            // Simple check if it looks like a Discord webhook URL
-            if (!webhookUrl.startsWith('https://discord.com/api/webhooks/')) {
-                 showStatus('Invalid Webhook URL format. It should start with "https://discord.com/api/webhooks/".', 'error');
-                 webhookUrlInput.focus();
-                 return;
-            }
-            if (!messageContent) {
-                showStatus('Message cannot be empty.', 'error');
-                messageInput.focus();
-                return;
+        class DiscordLogger {
+            constructor() {
+                this.webhookUrlInput = document.getElementById('webhookUrl');
+                this.messageInput = document.getElementById('message');
+                this.sendButton = document.getElementById('sendButton');
+                this.clearButton = document.getElementById('clearButton');
+                this.statusDiv = document.getElementById('status');
+                
+                this.initializeEventListeners();
+                this.loadSavedWebhookUrl();
             }
 
-            // Optional: Save webhook URL to localStorage for next time
-            localStorage.setItem('discordWebhookUrl', webhookUrl);
+            initializeEventListeners() {
+                this.sendButton.addEventListener('click', () => this.sendMessage());
+                this.clearButton.addEventListener('click', () => this.clearAll());
+                
+                // Add input validation listeners
+                this.webhookUrlInput.addEventListener('input', () => this.validateWebhookUrl());
+                this.messageInput.addEventListener('input', () => this.validateMessage());
+            }
 
-            // Disable button and show sending status
-            sendButton.disabled = true;
-            sendButton.textContent = 'Sending...';
-            showStatus('Sending message...', 'info');
-
-            const payload = {
-                content: messageContent
-                // You can add more fields like username or embeds here if needed
-                // username: "My Logger Bot",
-                // avatar_url: "...",
-                // embeds: [{ ... }]
-            };
-
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
-
-                if (response.ok) { // Status codes 200-299 are considered OK
-                    showStatus('Message sent successfully!', 'success');
-                    messageInput.value = ''; // Clear message input on success
-                } else {
-                    // Try to get error message from Discord response
-                    let errorText = `Error: ${response.status} ${response.statusText}`;
-                    try {
-                        const errorData = await response.json();
-                        errorText += ` - ${JSON.stringify(errorData)}`;
-                    } catch (e) {
-                        // Ignore if response body is not JSON or empty
-                    }
-                    showStatus(errorText, 'error');
+            loadSavedWebhookUrl() {
+                const savedUrl = localStorage.getItem('discordWebhookUrl');
+                if (savedUrl) {
+                    this.webhookUrlInput.value = savedUrl;
+                    this.validateWebhookUrl();
                 }
-            } catch (error) {
-                console.error('Fetch Error:', error);
-                showStatus(`Network error or failed to send: ${error.message}`, 'error');
-            } finally {
-                // Re-enable button regardless of success or failure
-                sendButton.disabled = false;
-                sendButton.textContent = 'Send Message';
+            }
+
+            validateWebhookUrl() {
+                const url = this.webhookUrlInput.value.trim();
+                if (!url) {
+                    this.webhookUrlInput.setCustomValidity('Webhook URL is required');
+                    return false;
+                }
+                if (!url.startsWith('https://discord.com/api/webhooks/')) {
+                    this.webhookUrlInput.setCustomValidity('Invalid Discord webhook URL format');
+                    return false;
+                }
+                this.webhookUrlInput.setCustomValidity('');
+                return true;
+            }
+
+            validateMessage() {
+                const message = this.messageInput.value.trim();
+                if (!message) {
+                    this.messageInput.setCustomValidity('Message cannot be empty');
+                    return false;
+                }
+                this.messageInput.setCustomValidity('');
+                return true;
+            }
+
+            showStatus(message, type) {
+                this.statusDiv.textContent = message;
+                this.statusDiv.className = `status-${type} visible`;
+                
+                // Auto-hide success messages after 3 seconds
+                if (type === 'success') {
+                    setTimeout(() => {
+                        this.statusDiv.className = '';
+                    }, 3000);
+                }
+            }
+
+            async sendMessage() {
+                if (!this.validateWebhookUrl() || !this.validateMessage()) {
+                    return;
+                }
+
+                const webhookUrl = this.webhookUrlInput.value.trim();
+                const messageContent = this.messageInput.value.trim();
+
+                // Save webhook URL
+                localStorage.setItem('discordWebhookUrl', webhookUrl);
+
+                // Update UI state
+                this.sendButton.disabled = true;
+                this.sendButton.textContent = 'Sending...';
+                this.showStatus('Sending message...', 'info');
+
+                try {
+                    const response = await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            content: messageContent,
+                            username: 'Discord Logger',
+                        })
+                    });
+
+                    if (response.ok) {
+                        this.showStatus('Message sent successfully!', 'success');
+                        this.messageInput.value = '';
+                    } else {
+                        const errorData = await response.json();
+                        this.showStatus(`Error: ${response.status} - ${errorData.message || 'Unknown error'}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('Fetch Error:', error);
+                    this.showStatus('Failed to send message. Check your connection.', 'error');
+                } finally {
+                    this.sendButton.disabled = false;
+                    this.sendButton.textContent = 'Send Message';
+                }
+            }
+
+            clearAll() {
+                this.webhookUrlInput.value = '';
+                this.messageInput.value = '';
+                localStorage.removeItem('discordWebhookUrl');
+                this.statusDiv.className = '';
+                this.showStatus('All fields cleared', 'info');
             }
         }
 
-        function showStatus(message, type) {
-            statusDiv.textContent = message;
-            // Set class based on type ('success', 'error', 'info')
-            statusDiv.className = `status-${type}`;
-        }
+        // Initialize the Discord Logger
+        document.addEventListener('DOMContentLoaded', () => {
+            new DiscordLogger();
+        });
     </script>
-
 </body>
 </html>
