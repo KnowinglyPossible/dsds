@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Clone - DevTools Protection</title>
+    <link rel="stylesheet" href="discord-fonts.css">
+    <link rel="icon" href="discord-icon.svg" type="image/svg+xml">
+    <style>
+        :root {
+            /* Discord Colors */
+            --discord-primary: #5865F2;
+            --discord-green: #57F287;
+            --discord-yellow: #FEE75C;
+            --discord-fuchsia: #EB459E;
+            --discord-red: #ED4245;
+            --discord-white: #FFFFFF;
+            --discord-black: #000000;
+
+            /* Background Colors */
+            --background-primary: #36393f;
+            --background-secondary: #2f3136;
+            --background-secondary-alt: #292b2f;
+            --background-tertiary: #202225;
+            --background-accent: #4f545c;
+            --background-floating: #18191c;
+
+            /* Text Colors */
+            --text-normal: #dcddde;
+            --text-muted: #72767d;
+            --text-link: #00b0f4;
+            --text-positive: #57f287;
+            --text-warning: #fee75c;
+            --text-danger: #ed4245;
+
+            /* Interactive Colors */
+            --interactive-normal: #b9bbbe;
+            --interactive-hover: #dcddde;
+            --interactive-active: #ffffff;
+            --interactive-muted: #4f545c;
+
+            /* Other */
+            --background-modifier-hover: rgba(79, 84, 92, 0.16);
+            --background-modifier-active: rgba(79, 84, 92, 0.24);
+            --background-modifier-selected: rgba(79, 84, 92, 0.32);
+            --background-modifier-accent: rgba(79, 84, 92, 0.48);
+
+            /* Elevation */
+            --elevation-low: 0 1px 0 rgba(4, 4, 5, 0.2), 0 1.5px 0 rgba(6, 6, 7, 0.05), 0 2px 0 rgba(4, 4, 5, 0.05);
+            --elevation-medium: 0 4px 4px rgba(0, 0, 0, 0.16);
+            --elevation-high: 0 8px 16px rgba(0, 0, 0, 0.24);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-tertiary);
+            color: var(--text-normal);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Server List */
+        .server-list {
+            width: 72px;
+            height: 100vh;
+            background-color: var(--background-tertiary);
+            padding: 12px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--background-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-normal);
+            font-weight: bold;
+            cursor: pointer;
+            transition: border-radius 0.2s;
+            position: relative;
+        }
+
+        .server-icon:hover {
+            border-radius: 16px;
+            background-color: var(--discord-primary);
+            color: var(--discord-white);
+        }
+
+        .server-icon.active {
+            border-radius: 16px;
+            background-color: var(--discord-primary);
+            color: var(--discord-white);
+        }
+
+        .server-icon.active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            width: 8px;
+            height: 40px;
+            border-radius: 0 4px 4px 0;
+            background-color: var(--discord-white);
+        }
+
+        .server-separator {
+            width: 32px;
+            height: 2px;
+            background-color: var(--background-accent);
+            margin: 8px 0;
+        }
+
+        /* Channel List */
+        .channel-list {
+            width: 240px;
+            height: 100vh;
+            background-color: var(--background-secondary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .server-header {
+            height: 48px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--elevation-low);
+            color: var(--text-normal);
+            font-weight: bold;
+            border-bottom: 1px solid var(--background-tertiary);
+        }
+
+        .server-name {
+            flex: 1;
+        }
+
+        .channel-category {
+            padding: 24px 8px 0 16px;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .channel-category span {
+            cursor: pointer;
+        }
+
+        .channel-item {
+            padding: 6px 8px;
+            margin: 2px 0 2px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .channel-item:hover {
+            background-color: var(--background-modifier-hover);
+            color: var(--interactive-hover);
+        }
+
+        .channel-item.active {
+            background-color: var(--background-modifier-selected);
+            color: var(--interactive-active);
+        }
+
+        .channel-icon {
+            margin-right: 6px;
+            font-size: 20px;
+        }
+
+        .user-area {
+            margin-top: auto;
+            height: 52px;
+            background-color: var(--background-secondary-alt);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--discord-primary);
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--discord-white);
+            font-weight: bold;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .username {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-normal);
+        }
+
+        .user-tag {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            height: 100vh;
+            background-color: var(--background-primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            height: 48px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--elevation-low);
+            border-bottom: 1px solid var(--background-tertiary);
+        }
+
+        .chat-header-icon {
+            margin-right: 6px;
+            font-size: 20px;
+            color: var(--text-muted);
+        }
+
+        .chat-header-name {
+            font-weight: 600;
+            color: var(--text-normal);
+        }
+
+        .chat-header-topic {
+            margin-left: 12px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 16px;
+            padding: 2px 0;
+        }
+
+        .message:hover {
+            background-color: var(--background-modifier-hover);
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--background-accent);
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-normal);
+            font-weight: bold;
+        }
+
+        .message-content-wrapper {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .message-author {
+            font-weight: 500;
+            color: var(--interactive-active);
+            margin-right: 8px;
+        }
+
+        .message-timestamp {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .message-content {
+            color: var(--text-normal);
+            line-height: 1.375;
+        }
+
+        .message-content a {
+            color: var(--text-link);
+            text-decoration: none;
+        }
+
+        .message-content a:hover {
+            text-decoration: underline;
+        }
+
+        .message-content code {
+            background-color: var(--background-secondary);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            font-size: 14px;
+        }
+
+        .message-content pre {
+            background-color: var(--background-secondary);
+            padding: 8px;
+            border-radius: 4px;
+            margin: 6px 0;
+            overflow-x: auto;
+        }
+
+        .message-content pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .chat-input-container {
+            padding: 0 16px 24px;
+        }
+
+        .chat-input {
+            background-color: var(--background-secondary);
+            border-radius: 8px;
+            padding: 11px 16px;
+            color: var(--text-normal);
+            border: none;
+            width: 100%;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Member List */
+        .member-list {
+            width: 240px;
+            height: 100vh;
+            background-color: var(--background-secondary);
+            padding: 16px 8px;
+            overflow-y: auto;
+        }
+
+        .member-category {
+            padding: 24px 8px 4px;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .member-item {
+            padding: 6px 8px;
+            margin: 1px 0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            color: var(--text-normal);
+            cursor: pointer;
+        }
+
+        .member-item:hover {
+            background-color: var(--background-modifier-hover);
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--background-accent);
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-normal);
+            font-weight: bold;
+        }
+
+        .member-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .member-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-positive);
+            margin-left: auto;
+        }
+
+        .member-status.idle {
+            background-color: var(--text-warning);
+        }
+
+        .member-status.dnd {
+            background-color: var(--text-danger);
+        }
+
+        .member-status.offline {
+            background-color: var(--text-muted);
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background-color: rgba(237, 66, 69, 0.1);
+            border: 1px solid var(--text-danger);
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .warning-box-title {
+            color: var(--text-danger);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .warning-box-content {
+            color: var(--text-normal);
+        }
+
+        /* Code Block */
+        .code-block {
+            background-color: var(--background-secondary);
+            border-radius: 4px;
+            padding: 12px;
+            margin: 8px 0;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            font-size: 14px;
+            color: var(--text-normal);
+            overflow-x: auto;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--background-accent);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--interactive-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Server List -->
+    <div class="server-list">
+        <div class="server-icon">
+            <span>D</span>
+        </div>
+        <div class="server-separator"></div>
+        <div class="server-icon active">
+            <span>S</span>
+        </div>
+        <div class="server-icon">
+            <span>C</span>
+        </div>
+        <div class="server-icon">
+            <span>J</span>
+        </div>
+        <div class="server-icon">
+            <span>P</span>
+        </div>
+        <div class="server-icon">
+            <span>+</span>
+        </div>
+    </div>
+
+    <!-- Channel List -->
+    <div class="channel-list">
+        <div class="server-header">
+            <div class="server-name">Security Server</div>
+        </div>
+
+        <div class="channel-category">
+            <span>Information</span>
+        </div>
+        <div class="channel-item">
+            <span class="channel-icon">#</span>
+            <span>welcome</span>
+        </div>
+        <div class="channel-item">
+            <span class="channel-icon">#</span>
+            <span>rules</span>
+        </div>
+
+        <div class="channel-category">
+            <span>Security Topics</span>
+        </div>
+        <div class="channel-item active">
+            <span class="channel-icon">#</span>
+            <span>devtools-protection</span>
+        </div>
+        <div class="channel-item">
+            <span class="channel-icon">#</span>
+            <span>web-security</span>
+        </div>
+        <div class="channel-item">
+            <span class="channel-icon">#</span>
+            <span>anti-debugging</span>
+        </div>
+        <div class="channel-item">
+            <span class="channel-icon">#</span>
+            <span>code-obfuscation</span>
+        </div>
+
+        <div class="channel-category">
+            <span>General</span>
+        </div>
+        <div class="channel-item">
+            <span class="channel-icon">#</span>
+            <span>general</span>
+        </div>
+        <div class="channel-item">
+            <span class="channel-icon">#</span>
+            <span>off-topic</span>
+        </div>
+
+        <div class="user-area">
+            <div class="user-avatar">U</div>
+            <div class="user-info">
+                <div class="username">User</div>
+                <div class="user-tag">#1234</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+        <div class="chat-header">
+            <span class="chat-header-icon">#</span>
+            <span class="chat-header-name">devtools-protection</span>
+            <span class="chat-header-topic">Discuss techniques to prevent developer tools usage</span>
+        </div>
+
+        <div class="messages-container">
+            <div class="message">
+                <div class="message-avatar">S</div>
+                <div class="message-content-wrapper">
+                    <div class="message-header">
+                        <span class="message-author">SecurityBot</span>
+                        <span class="message-timestamp">Today at 12:00 PM</span>
+                    </div>
+                    <div class="message-content">
+                        <div class="warning-box">
+                            <div class="warning-box-title">Developer Tools Protection</div>
+                            <div class="warning-box-content">
+                                This page has developer tools protection enabled. If you try to open developer tools, they will be detected and disabled, but other functionality like right-clicking and copy-paste will still work.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message">
+                <div class="message-avatar">S</div>
+                <div class="message-content-wrapper">
+                    <div class="message-header">
+                        <span class="message-author">SecurityBot</span>
+                        <span class="message-timestamp">Today at 12:01 PM</span>
+                    </div>
+                    <div class="message-content">
+                        <p>This demo uses multiple techniques to detect and block developer tools while allowing normal browsing functionality:</p>
+                        <ul style="padding-left: 20px; margin: 8px 0;">
+                            <li>Window size difference detection</li>
+                            <li>Debugger-based detection</li>
+                            <li>Console method overriding</li>
+                            <li>Developer tools keyboard shortcut blocking</li>
+                            <li>Preserves normal functionality (right-click, copy-paste, etc.)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message">
+                <div class="message-avatar">D</div>
+                <div class="message-content-wrapper">
+                    <div class="message-header">
+                        <span class="message-author">DevUser</span>
+                        <span class="message-timestamp">Today at 12:05 PM</span>
+                    </div>
+                    <div class="message-content">
+                        <p>How do I implement this on my own website?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message">
+                <div class="message-avatar">S</div>
+                <div class="message-content-wrapper">
+                    <div class="message-header">
+                        <span class="message-author">SecurityBot</span>
+                        <span class="message-timestamp">Today at 12:06 PM</span>
+                    </div>
+                    <div class="message-content">
+                        <p>To implement this protection on your own site, simply include the script:</p>
+                        <div class="code-block">&lt;script src="disable-devtools.js"&gt;&lt;/script&gt;</div>
+                        <p>You can also configure the protection by using the global API:</p>
+                        <div class="code-block">window.devToolsDetector.configure({
+    redirectUrl: 'https://example.com/unauthorized',
+    message: 'Custom warning message',
+    blockOnlyDevTools: true  // Only block dev tools, allow other functionality
+});</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message">
+                <div class="message-avatar">A</div>
+                <div class="message-content-wrapper">
+                    <div class="message-header">
+                        <span class="message-author">Admin</span>
+                        <span class="message-timestamp">Today at 12:10 PM</span>
+                    </div>
+                    <div class="message-content">
+                        <p>Remember that this script is designed to deter casual users from using developer tools. No protection is 100% foolproof against determined users. Use this as part of a broader security strategy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" placeholder="Message #devtools-protection">
+        </div>
+    </div>
+
+    <!-- Member List -->
+    <div class="member-list">
+        <div class="member-category">Online — 3</div>
+        <div class="member-item">
+            <div class="member-avatar">A</div>
+            <div class="member-name">Admin</div>
+            <div class="member-status"></div>
+        </div>
+        <div class="member-item">
+            <div class="member-avatar">S</div>
+            <div class="member-name">SecurityBot</div>
+            <div class="member-status"></div>
+        </div>
+        <div class="member-item">
+            <div class="member-avatar">D</div>
+            <div class="member-name">DevUser</div>
+            <div class="member-status idle"></div>
+        </div>
+
+        <div class="member-category">Offline — 1</div>
+        <div class="member-item">
+            <div class="member-avatar">U</div>
+            <div class="member-name">User</div>
+            <div class="member-status offline"></div>
+        </div>
+    </div>
+
+    <!-- Include the devtools protection script -->
+    <script src="disable-devtools.js"></script>
+</body>
+</html>
