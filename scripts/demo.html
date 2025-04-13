@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTools Protection Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>DevTools Protection Demo</h1>
+
+    <div class="warning">
+        <strong>Note:</strong> This page has developer tools protection enabled.
+        If you try to open developer tools, they will be detected and disabled, but other functionality like right-clicking and copy-paste will still work.
+    </div>
+
+    <h2>How It Works</h2>
+    <p>
+        This demo uses multiple techniques to detect and block developer tools while allowing normal browsing functionality:
+    </p>
+    <ul>
+        <li>Window size difference detection</li>
+        <li>Debugger-based detection</li>
+        <li>Console method overriding</li>
+        <li>Developer tools keyboard shortcut blocking</li>
+        <li>Preserves normal functionality (right-click, copy-paste, etc.)</li>
+    </ul>
+
+    <h2>Implementation</h2>
+    <p>
+        To implement this protection on your own site, simply include the script:
+    </p>
+    <pre><code>&lt;script src="disable-devtools.js"&gt;&lt;/script&gt;</code></pre>
+
+    <p>
+        You can also configure the protection by using the global API:
+    </p>
+    <pre><code>window.devToolsDetector.configure({
+    redirectUrl: 'https://example.com/unauthorized',
+    message: 'Custom warning message',
+    blockOnlyDevTools: true  // Only block dev tools, allow other functionality
+});</code></pre>
+
+    <!-- Include the devtools protection script -->
+    <script src="disable-devtools.js"></script>
+</body>
+</html>
