@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unauthorized Access - Discord</title>
-    <link rel="stylesheet" href="discord-fonts.css">
-    <link rel="icon" href="discord-icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/discord-fonts.css">
+    <link rel="icon" href="../assets/discord-icon.svg" type="image/svg+xml">
     <style>
         :root {
             /* Discord Colors */
@@ -24,7 +24,7 @@
             --background-tertiary: #202225;
             --background-accent: #4f545c;
             --background-floating: #18191c;
-            
+
             /* Text Colors */
             --text-normal: #dcddde;
             --text-muted: #72767d;
@@ -126,7 +126,7 @@
     <script>
         // Log the unauthorized access attempt
         console.log("Unauthorized access attempt logged");
-        
+
         // Prevent going back to the previous page
         history.pushState(null, null, document.URL);
         window.addEventListener('popstate', function () {

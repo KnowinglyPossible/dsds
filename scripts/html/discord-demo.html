@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="discord-icon.svg" type="image/svg+xml">
     <title>Discord Clone - DevTools Protection</title>
+    <link rel="icon" href="../assets/discord-icon.svg" type="image/svg+xml">
 
     <!-- Performance optimizations -->
     <link rel="preload" href="https://cdn.jsdelivr.net/gh/Overimagine1/old-discord-font/fonts/whitney-400.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="discord-icon.svg" as="image" type="image/svg+xml">
-    <link rel="preload" href="disable-devtools.js" as="script">
+    <link rel="preload" href="../assets/discord-icon.svg" as="image" type="image/svg+xml">
+    <link rel="preload" href="../js/disable-devtools.js" as="script">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="discord-fonts.css">
+    <link rel="stylesheet" href="../css/discord-fonts.css">
     <style>
         /* Variables */
         :root {
@@ -719,7 +719,7 @@
     </div>
 
     <!-- Include the devtools protection script with async loading -->
-    <script src="disable-devtools.js"></script>
+    <script src="../js/disable-devtools.js"></script>
 
     <!-- Configure devtools detector to redirect to unauthorized page -->
     <script>

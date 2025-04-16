@@ -57,12 +57,12 @@
         You can also configure the protection by using the global API:
     </p>
     <pre><code>window.devToolsDetector.configure({
-    redirectUrl: 'https://example.com/unauthorized',
+    redirectUrl: 'unauthorized.html',
     message: 'Custom warning message',
     blockOnlyDevTools: true  // Only block dev tools, allow other functionality
 });</code></pre>
 
     <!-- Include the devtools protection script -->
-    <script src="disable-devtools.js"></script>
+    <script src="../js/disable-devtools.js"></script>
 </body>
 </html>
