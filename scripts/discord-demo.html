@@ -671,7 +671,7 @@
                         <div class="code-block">&lt;script src="disable-devtools.js"&gt;&lt;/script&gt;</div>
                         <p>You can also configure the protection by using the global API:</p>
                         <div class="code-block">window.devToolsDetector.configure({
-    redirectUrl: 'https://example.com/unauthorized',
+    redirectUrl: 'unauthorized.html',
     message: 'Custom warning message',
     blockOnlyDevTools: true  // Only block dev tools, allow other functionality
 });</div>
@@ -719,7 +719,17 @@
     </div>
 
     <!-- Include the devtools protection script with async loading -->
-    <script src="disable-devtools.js" async></script>
+    <script src="disable-devtools.js"></script>
+
+    <!-- Configure devtools detector to redirect to unauthorized page -->
+    <script>
+        // Configure the devtools detector
+        window.devToolsDetector.configure({
+            redirectUrl: 'unauthorized.html',
+            message: 'Developer tools are not allowed on this page.',
+            blockOnlyDevTools: true  // Only block dev tools, allow other functionality
+        });
+    </script>
 
     <!-- Performance optimization script -->
     <script>

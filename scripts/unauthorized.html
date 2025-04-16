@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unauthorized Access - Discord</title>
+    <link rel="stylesheet" href="discord-fonts.css">
+    <link rel="icon" href="discord-icon.svg" type="image/svg+xml">
+    <style>
+        :root {
+            /* Discord Colors */
+            --discord-primary: #5865F2;
+            --discord-green: #57F287;
+            --discord-yellow: #FEE75C;
+            --discord-fuchsia: #EB459E;
+            --discord-red: #ED4245;
+            --discord-white: #FFFFFF;
+            --discord-black: #000000;
+
+            /* Background Colors */
+            --background-primary: #36393f;
+            --background-secondary: #2f3136;
+            --background-secondary-alt: #292b2f;
+            --background-tertiary: #202225;
+            --background-accent: #4f545c;
+            --background-floating: #18191c;
+            
+            /* Text Colors */
+            --text-normal: #dcddde;
+            --text-muted: #72767d;
+            --text-link: #00b0f4;
+            --text-positive: #57f287;
+            --text-warning: #fee75c;
+            --text-danger: #ed4245;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-tertiary);
+            color: var(--text-normal);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: var(--background-primary);
+            border-radius: 8px;
+            padding: 32px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
+            text-align: center;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-normal);
+        }
+
+        .error-code {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .message {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            color: var(--text-normal);
+        }
+
+        .button {
+            background-color: var(--discord-primary);
+            color: var(--discord-white);
+            border: none;
+            border-radius: 4px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #4752c4;
+        }
+
+        .warning-icon {
+            color: var(--text-danger);
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="warning-icon">⚠️</div>
+        <h1>Unauthorized Access</h1>
+        <div class="error-code">Error Code: 403</div>
+        <p class="message">
+            Developer tools are not allowed on this page. This incident has been logged.
+        </p>
+        <a href="discord-demo.html" class="button">Return to Discord</a>
+    </div>
+
+    <script>
+        // Log the unauthorized access attempt
+        console.log("Unauthorized access attempt logged");
+        
+        // Prevent going back to the previous page
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+    </script>
+</body>
+</html>
